@@ -17,7 +17,7 @@ public class CorsConfig {
                         .allowedOrigins(
                             "http://localhost:4200",
                             "https://usluznosecenje.rs",
-                            "https://*.vercel.app"
+                            "https://usluzno-secenje-okzc.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
