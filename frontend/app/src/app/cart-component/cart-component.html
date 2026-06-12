@@ -1,0 +1,58 @@
+<div class="cartDrawer">
+
+  <div class="cartHeader">
+    <h2>Vaša korpa</h2>
+    <button class="closeBtn" (click)="close.emit()">✕</button>
+  </div>
+
+  <!-- EMPTY -->
+  <div class="cartEmpty" *ngIf="cart.items().length === 0">
+    <p>Korpa je prazna</p>
+    <span>Dodajte proizvode iz ponude</span>
+  </div>
+
+  <!-- ITEMS -->
+  <div class="cartItems" *ngIf="cart.items().length > 0">
+
+    @for(item of cart.items(); track item.product.id) {
+      <div class="cartItem">
+
+        <img [src]="item.product.image" [alt]="item.product.title" class="itemImg">
+
+        <div class="itemInfo">
+          <h4>{{ item.product.title }}</h4>
+          <span class="itemCat">{{ item.product.category }}</span>
+          <span class="itemPrice">{{ item.product.price | number }} RSD</span>
+        </div>
+
+        <div class="itemControls">
+          <div class="qtyWrap">
+            <button (click)="decrement(item.product.id, item.quantity)">−</button>
+            <span>{{ item.quantity }}</span>
+            <button (click)="increment(item.product.id, item.quantity)">+</button>
+          </div>
+          <button class="removeBtn" (click)="cart.remove(item.product.id)" style = "color: red;">✕</button>
+        </div>
+
+      </div>
+    }
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="cartFooter" *ngIf="cart.items().length > 0">
+
+    <div class="totalRow">
+      <span>Ukupno:</span>
+      <strong>{{ cart.totalPrice() | number }} RSD</strong>
+    </div>
+
+    <p class="cartNote">Cene su bez PDV-a. Isporuka se dogovara.</p>
+
+    <button class="orderBtn" routerLink="/korpa" (click)="close.emit()">
+      <span>Završi kupovinu</span>
+    </button>
+
+  </div>
+
+</div>

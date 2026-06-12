@@ -1,0 +1,72 @@
+<app-navbar></app-navbar>
+
+<section class="uslugaBanner">
+  <video
+    #bgVideo
+    muted
+    loop
+    playsinline
+    autoplay
+    preload="auto"
+    class="usluga-video">
+
+    <source src="/hero1.mp4" type="video/mp4">
+  </video>
+  <span class="usluga-tag">NAŠE USLUGE</span>
+  <h1 class="usluga-h1">Uslužno lasersko sečenje</h1>
+  <p class="usluga-sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  <div class="usluga-cta">
+    <button class="btn-primary" routerLink="/upit">Pošalji upit</button>
+  </div>
+</section>
+
+<section class="machine-section">
+
+  <span class="machine-eyebrow">PROIZVODNI PARK</span>
+
+  <h2 class="machine-heading">Naše mašine</h2>
+
+  <p class="machine-sub">
+    Raspolažemo sa dva fiber lasera različitih snaga i maksimalnim formatom
+    table 3000 × 1500 mm za preciznu i efikasnu obradu metala.
+  </p>
+
+  <div class="machine-grid">
+
+    <div class="machine-card">
+      <span class="machine-number">01</span>
+
+      <div class="machine-image-wrap">
+        <img class="machine-img" src="masina2.png" alt="Laser 1">
+      </div>
+
+      <h3 class="machine-title">LF3015LNR V2</h3> 
+      <p class="machine-desc">
+        Precizna obrada limova uz vrhunski kvalitet reza i visoku produktivnost. Pogodna za izradu složenih oblika i detalja sa maksimalnom tačnošću.
+      </p>
+    </div>
+
+    <div class="machine-card">
+      <span class="machine-number">02</span>
+
+      <div class="machine-image-wrap">
+        <img class="machine-img" src="masina1.png" alt="Laser 2">
+      </div>
+
+      <h3 class="machine-title">LF3015LNR</h3>
+    
+      <p class="machine-desc">
+        Efikasno i pouzdano sečenje metala uz čiste ivice i minimalnu potrebu za dodatnom obradom. Garantuje brzinu, preciznost i konzistentan kvalitet gotovih proizvoda.
+      </p>
+    </div>
+
+  </div>
+
+
+</section>
+
+<section style="border-top:4px solid #ff6b00;">
+  <app-upit></app-upit>
+</section>
+
+<app-footer-component></app-footer-component>

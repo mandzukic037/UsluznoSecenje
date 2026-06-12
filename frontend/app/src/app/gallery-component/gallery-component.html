@@ -1,0 +1,127 @@
+<app-navbar></app-navbar>
+
+<section class="galleryHero">
+
+  <img src="/gallery-cover.png" class="galleryHeroImage">
+
+  <div class="galleryOverlay"></div>
+
+  <span class="galleryTag">NAŠI RADOVI</span>
+
+  <h1 class="galleryTitle">
+    Projekti koje smo
+    <span>realizovali</span>
+  </h1>
+
+  <p class="gallerySubtitle">
+    Pogledajte deo naših uspešno završenih projekata iz oblasti
+    laserskog sečenja, CNC savijanja, graviranja i obrade metala.
+  </p>
+
+</section>
+
+<section class="galleryStats">
+
+  <div class="statCard">
+    <h3>2000+</h3>
+    <p>Realizovanih projekata</p>
+  </div>
+
+  <div class="statCard">
+    <h3>25+</h3>
+    <p>Godina iskustva</p>
+  </div>
+
+  <div class="statCard">
+    <h3>100%</h3>
+    <p>Posvećenost kvalitetu</p>
+  </div>
+
+</section>
+
+<section class="gallerySection">
+
+  <span class="galleryEyebrow">PORTFOLIO</span>
+
+  <h2 class="galleryHeading">
+    Izdvojeni <span>radovi</span>
+  </h2>
+
+  <p class="galleryText">
+    Preciznost, kvalitet i iskustvo pretočeni u stotine uspešno
+    realizovanih projekata širom industrije.
+  </p>
+
+  <div class="galleryFilters">
+
+    <button
+        [class.active]="selectedCategory === 'Sve'"
+        (click)="selectedCategory='Sve'">
+        Sve
+    </button>
+
+    <button
+        [class.active]="selectedCategory === 'Lasersko sečenje'"
+        (click)="selectedCategory='Lasersko sečenje'">
+        Lasersko sečenje
+    </button>
+
+    <button
+        [class.active]="selectedCategory === 'CNC savijanje'"
+        (click)="selectedCategory='CNC savijanje'">
+        CNC savijanje
+    </button>
+
+    <button
+        [class.active]="selectedCategory === 'Graviranje'"
+        (click)="selectedCategory='Graviranje'">
+        Graviranje
+    </button>
+
+    <button
+        [class.active]="selectedCategory === 'CAD Design'"
+        (click)="selectedCategory='CAD Design'">
+        CAD Design
+    </button>
+
+    </div>
+
+  <div class="galleryGrid">
+
+    
+
+  @for(item of filteredItems; track item;) {
+    <div class="galleryItem">
+        <img [src]="item.image">
+
+        <div class="galleryInfo">
+            <h3>{{item.title}}</h3>
+            <span>{{item.category}}</span>
+        </div>
+    </div>
+  }
+
+  </div>
+
+</section>
+
+<section class="galleryCTA">
+
+  <span class="galleryEyebrow">KONTAKT</span>
+
+  <h2>
+    Imate projekat za realizaciju?
+  </h2>
+
+  <p>
+    Pošaljite crtež, skicu ili ideju i dobićete profesionalno rešenje
+    prilagođeno vašim potrebama.
+  </p>
+
+  <button routerLink="/upit">
+    Pošalji upit
+  </button>
+
+</section>
+
+<app-footer-component></app-footer-component>

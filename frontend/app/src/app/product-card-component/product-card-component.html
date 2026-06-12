@@ -1,0 +1,28 @@
+<div class="card">
+
+  <div class="cardImageWrap">
+    <img [src]="product.image" [alt]="product.title" class="cardImage">
+    <span class="cardBadge">{{ product.category }}</span>
+  </div>
+
+  <div class="cardBody">
+
+    <h3 class="cardTitle">{{ product.title }}</h3>
+    <p class="cardDesc">{{ product.description }}</p>
+
+    <div class="cardMeta" *ngIf="product.material !== '-'">
+      <span><strong>Materijal:</strong> {{ product.material }}</span>
+      <span><strong>Debljina:</strong> {{ product.thickness }}</span>
+    </div>
+
+    <div class="cardFooter">
+      <span class="cardPrice">{{ product.price | number }} RSD</span>
+      <button class="addBtn" [class.added]="added" (click)="addToCart()">
+        <span *ngIf="!added">+ Dodaj</span>
+        <span *ngIf="added">✓ Dodato</span>
+      </button>
+    </div>
+
+  </div>
+
+</div>

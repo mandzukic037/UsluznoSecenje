@@ -1,0 +1,130 @@
+<app-navbar></app-navbar>
+
+<div class="upit-wrap" >
+  <h2>Pošalji upit</h2>
+
+  <form (ngSubmit)="sendUpit()" #form="ngForm">
+
+    <div class="form-grid">
+      <div class="form-grid-item">
+        <label>Ime:</label>
+        <input type="text" class="inputText" name="firstname" [(ngModel)]="firstname">
+      </div>
+
+      <div class="form-grid-item">
+        <label>Prezime:</label>
+        <input type="text" class="inputText" name="lastname" [(ngModel)]="lastname">
+      </div>
+
+      <div class="form-grid-item">
+        <label>Mail:</label>
+        <input type="email" class="inputText" name="mail" [(ngModel)]="mail">
+      </div>
+
+      <div class="form-grid-item">
+        <label>Broj telefona:</label>
+        <input type="tel" class="inputText" name="telephone" [(ngModel)]="telephone">
+      </div>
+    </div>
+
+    <label>Opis upita</label>
+    <textarea
+      name="opis"
+      [(ngModel)]="opis"
+      rows="5"
+      placeholder="Opiši šta ti treba...">
+    </textarea>
+
+    <div class="form-grid-item">
+      <label>Željena usluga:</label>
+      <select name="usluga" class="inputText" [(ngModel)]="usluga">
+        <option value="" disabled selected>Izaberi uslugu</option>
+        <option value="Lasersko sečenje">Lasersko sečenje</option>
+        <option value="CNC savijanje">CNC savijanje</option>
+        <option value="Lasersko graviranje">Lasersko graviranje</option>
+        <option value="CAD & Design">CAD & Design</option>
+        <option value="Tehnička podrška">Tehnička podrška</option>
+      </select>
+    </div>
+
+    <label>Dodaj fajlove</label>
+
+    <div
+      class="drop-zone"
+      (dragover)="onDragOver($event)"
+      (drop)="onDrop($event)"
+      (click)="fileInput.click()"
+    >
+      <p>Prevuci fajlove ovde ili klikni za upload</p>
+
+      <input
+        #fileInput
+        type="file"
+        accept=".png,.jpg,.jpeg,.pdf,.doc,.docx,.zip,.dxf,.dwg,.gif,.igs,.zzx,.txt,.step,.ifc,.nc,.jhb"
+        multiple
+        hidden
+        (change)="onFilesSelected($event)"
+      >
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview-grid">
+
+      @for (file of filePreviews; track file; let i = $index) {
+        <div class="preview-item">
+
+            <button class="remove-btn" type="button" (click)="removeFile(i)">
+                ✕
+            </button>
+
+            @if (file.type.startsWith('image/')) {
+                <div class="image-preview">
+                <img [src]="file.url" />
+                <div class="overlay"></div>
+                <span class="file-name">{{ file.name }}</span>
+                </div>
+            } @else {
+                <div class="file-preview">
+                <img class="bg-icon" src="file-bg.png" />
+                <div class="overlay"></div>
+                <span class="file-name">{{ file.name }}</span>
+                </div>
+            }
+
+        </div>
+      }
+
+    </div>
+
+    <p style="font-size:12px; color:#888; margin-top:10px;">
+      {{ selectedFiles.length }}/{{ maxFiles }} fajlova
+    </p>
+
+    <p style="font-size:12px; color:#888; margin-top:10px;">
+      {{ (totalSize / (1024 * 1024)).toFixed(2) }}/25 MB
+    </p>
+
+    <button type="submit" [disabled]="loading" class="button-posalji">
+      {{ loading ? 'Šalje se...' : 'Pošalji' }}
+    </button>
+
+    @if(successMessage){
+      <div class="success-message">
+        {{ successMessage }}
+      </div>
+    }
+
+    @if(failMessage){
+      <div class="fail-message">
+        {{ failMessage }}
+      </div>
+    }
+
+     @if(fileSizeMessage){
+      <div class="fail-message">
+        {{ fileSizeMessage }}
+      </div>
+    }
+
+  </form>
+</div>

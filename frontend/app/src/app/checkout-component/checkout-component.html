@@ -1,0 +1,336 @@
+<div class="coWrapper">
+
+  <!-- HEADER -->
+  <div class="coHeader">
+    <button class="backBtn" routerLink="/prodavnica">← Nazad na prodavnicu</button>
+    <h1 class="coLogo">Checkout</h1>
+  </div>
+
+  <!-- ORDER DONE -->
+  <div class="orderSuccess" *ngIf="orderDone()">
+    <h2>Porudžbina primljena!</h2>
+    <p>Hvala na ukazanom poverenju!<br>Kontaktiraćemo vas u najkraćem roku radi potvrde i dogovora oko isporuke.</p>
+    <span class="redirectNote">Preusmeravanje na početnu...</span>
+  </div>
+
+  <div class="coContent" *ngIf="!orderDone()">
+
+    <!-- STEPPER -->
+    <div class="stepper">
+      @for(step of steps; track step.key; let i = $index) {
+        <div class="stepItem"
+          [class.active]="currentStep() === step.key"
+          [class.done]="isDone(step.key)">
+          <div class="stepDot">
+            <span *ngIf="!isDone(step.key)">{{ i + 1 }}</span>
+            <span *ngIf="isDone(step.key)">✓</span>
+          </div>
+          <span class="stepLabel">{{ step.label }}</span>
+        </div>
+        <div class="stepLine" *ngIf="i < steps.length - 1"></div>
+      }
+    </div>
+
+    <div class="coLayout">
+
+      <!-- LEFT: STEPS -->
+      <div class="coMain">
+
+        <!-- STEP 1: KORPA -->
+        <div *ngIf="currentStep() === 'korpa'">
+
+          <h2 class="stepTitle">Vaša korpa</h2>
+
+          <div class="emptyCart" *ngIf="cart.items().length === 0">
+            <p>Korpa je prazna.</p>
+            <button routerLink="/prodavnica" class="btnSecondary">Idi na prodavnicu</button>
+          </div>
+
+          <div *ngIf="cart.items().length > 0">
+
+            @for(item of cart.items(); track item.product.id) {
+              <div class="checkItem">
+
+                <img [src]="item.product.image" [alt]="item.product.title" class="checkItemImg">
+
+                <div class="checkItemInfo">
+                  <h4>{{ item.product.title }}</h4>
+                  <span class="checkItemCat">{{ item.product.category }}</span>
+                  <span class="checkItemMeta" *ngIf="item.product.material !== '-'">
+                    {{ item.product.material }} · {{ item.product.thickness }}
+                  </span>
+                </div>
+
+                <div class="checkItemRight">
+                  <div class="qtyControl">
+                    <button (click)="cart.updateQuantity(item.product.id, item.quantity - 1)">−</button>
+                    <span>{{ item.quantity }}</span>
+                    <button (click)="cart.updateQuantity(item.product.id, item.quantity + 1)">+</button>
+                  </div>
+                  <span class="checkItemPrice">{{ item.product.price * item.quantity | number }} RSD</span>
+                  <button class="removeItem" (click)="cart.remove(item.product.id)" style="color: red;">✕</button>
+                </div>
+
+              </div>
+            }
+
+            <div class="stepNav">
+              <span></span>
+              <button class="btnPrimary" (click)="nextStep()">Nastavi →</button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- STEP 2: DOSTAVA I PODACI -->
+        <div *ngIf="currentStep() === 'dostava'" [formGroup]="form">
+
+          <h2 class="stepTitle">Podaci o naručiocu</h2>
+
+          <div class="formGrid" id="checkoutForm">
+
+            <div class="formGroup">
+              <label>Ime *</label>
+              <input name="firstname" formControlName="ime" placeholder="Vaše ime" [class.error]="isInvalid('ime')">
+              <span class="errMsg" *ngIf="isInvalid('ime')">Obavezno polje</span>
+            </div>
+
+            <div class="formGroup">
+              <label>Prezime *</label>
+              <input name="lastname" formControlName="prezime" placeholder="Vaše prezime" [class.error]="isInvalid('prezime')">
+              <span class="errMsg" *ngIf="isInvalid('prezime')">Obavezno polje</span>
+            </div>
+
+            <div class="formGroup">
+              <label>Email *</label>
+              <input name="email" formControlName="email" type="email" placeholder="email@domen.com" [class.error]="isInvalid('email')">
+              <span class="errMsg" *ngIf="isInvalid('email')">Unesite validan email</span>
+            </div>
+
+            <div class="formGroup">
+              <label>Telefon *</label>
+              <input name="phone" formControlName="telefon" placeholder="+381 60 000 0000" [class.error]="isInvalid('telefon')">
+              <span class="errMsg" *ngIf="isInvalid('telefon')">Obavezno polje</span>
+            </div>
+
+            <div class="formGroup">
+              <label>Naziv firme</label>
+              <input name="company" formControlName="firma" placeholder="Naziv firme (opciono)">
+            </div>
+
+            <div class="formGroup">
+              <label>PIB</label>
+              <input name="pib" formControlName="pib" placeholder="PIB (opciono)">
+            </div>
+
+          </div>
+
+          <h2 class="stepTitle" style="margin-top:36px">Adresa dostave</h2>
+
+          <div class="formGrid">
+
+            <div class="formGroup full">
+              <label>Ulica i broj *</label>
+              <input name="address" formControlName="adresa" placeholder="Ulica i broj" [class.error]="isInvalid('adresa')">
+              <span class="errMsg" *ngIf="isInvalid('adresa')">Obavezno polje</span>
+            </div>
+
+            <div class="formGroup">
+              <label>Grad *</label>
+              <input name="city" formControlName="grad" placeholder="Grad" [class.error]="isInvalid('grad')">
+              <span class="errMsg" *ngIf="isInvalid('grad')">Obavezno polje</span>
+            </div>
+
+            <div class="formGroup">
+              <label>Poštanski broj *</label>
+              <input name="postalCode" formControlName="postBroj" placeholder="11000" [class.error]="isInvalid('postBroj')">
+              <span class="errMsg" *ngIf="isInvalid('postBroj')">Obavezno polje</span>
+            </div>
+
+          </div>
+
+          <h2 class="stepTitle" style="margin-top:36px">Način dostave</h2>
+
+          <div class="radioGroup">
+
+            <label class="radioCard" [class.selected]="dostavaValue === 'preuzimanje'">
+              <input type="radio" formControlName="dostava" value="preuzimanje">
+              <div class="radioContent">
+                <span class="radioIcon">🏭</span>
+                <div>
+                  <strong>Lično preuzimanje</strong>
+                  <p>Preuzimanje u našem objektu · Besplatno</p>
+                </div>
+              </div>
+            </label>
+
+            <label class="radioCard" [class.selected]="dostavaValue === 'kurirska'">
+              <input type="radio" formControlName="dostava" value="kurirska">
+              <div class="radioContent">
+                <span class="radioIcon">🚚</span>
+                <div>
+                  <strong>Kurirska dostava</strong>
+                  <p>Dostava na adresu · Cena po dogovoru</p>
+                </div>
+              </div>
+            </label>
+
+          </div>
+
+          <h2 class="stepTitle" style="margin-top:36px">Način plaćanja</h2>
+
+          <div class="radioGroup">
+
+            <label class="radioCard" [class.selected]="placeValue === 'racun'">
+              <input type="radio" formControlName="placanje" value="racun">
+              <div class="radioContent">
+                <span class="radioIcon">🏦</span>
+                <div>
+                  <strong>Uplata na račun</strong>
+                  <p>Virmansko plaćanje po predračunu</p>
+                </div>
+              </div>
+            </label>
+
+            <label class="radioCard" [class.selected]="placeValue === 'gotovina'">
+              <input type="radio" formControlName="placanje" value="gotovina">
+              <div class="radioContent">
+                <span class="radioIcon">💵</span>
+                <div>
+                  <strong>Gotovina</strong>
+                  <p>Plaćanje pri preuzimanju</p>
+                </div>
+              </div>
+            </label>
+
+          </div>
+
+          <div class="formGroup full" style="margin-top:24px">
+            <label>Napomena</label>
+            <textarea formControlName="napomena" rows="3" placeholder="Posebni zahtevi, napomene uz porudžbinu..."></textarea>
+          </div>
+
+          <div class="stepNav">
+            <button class="btnSecondary" (click)="prevStep()">← Nazad</button>
+            <button class="btnPrimary" (click)="nextStep()">Nastavi →</button>
+          </div>
+
+        </div>
+
+        <!-- STEP 3: POTVRDA -->
+        <div *ngIf="currentStep() === 'potvrda'">
+
+          <h2 class="stepTitle">Pregled porudžbine</h2>
+
+          <div class="summaryBlock">
+            <h3>Podaci o naručiocu</h3>
+            <div class="summaryRow">
+              <span>Ime i prezime</span>
+              <strong>{{ form.value.ime }} {{ form.value.prezime }}</strong>
+            </div>
+            <div class="summaryRow">
+              <span>Email</span>
+              <strong>{{ form.value.email }}</strong>
+            </div>
+            <div class="summaryRow">
+              <span>Telefon</span>
+              <strong>{{ form.value.telefon }}</strong>
+            </div>
+            <div class="summaryRow" *ngIf="form.value.firma">
+              <span>Firma</span>
+              <strong>{{ form.value.firma }}</strong>
+            </div>
+          </div>
+
+          <div class="summaryBlock">
+            <h3>Dostava i plaćanje</h3>
+            <div class="summaryRow">
+              <span>Adresa</span>
+              <strong>{{ form.value.adresa }}, {{ form.value.postBroj }} {{ form.value.grad }}</strong>
+            </div>
+            <div class="summaryRow">
+              <span>Način dostave</span>
+              <strong>{{ dostavaValue === 'preuzimanje' ? 'Lično preuzimanje' : 'Kurirska dostava' }}</strong>
+            </div>
+            <div class="summaryRow">
+              <span>Plaćanje</span>
+              <strong>{{ placeValue === 'racun' ? 'Uplata na račun' : 'Gotovina' }}</strong>
+            </div>
+          </div>
+
+          <div class="summaryBlock">
+            <h3>Proizvodi</h3>
+            @for(item of cart.items(); track item.product.id) {
+              <div class="summaryRow">
+                <span>{{ item.product.title }} × {{ item.quantity }}</span>
+                <strong>{{ item.product.price * item.quantity * 1.2 | number }} RSD</strong>
+              </div>
+            }
+          </div>
+
+          <div class="stepNav">
+            <button class="btnSecondary" (click)="prevStep()" [disabled]="orderLoading()">← Nazad</button>
+            <button class="btnPrimary confirm" (click)="submitOrder()" [disabled]="orderLoading()">
+              {{ orderLoading() ? 'Šalje se...' : 'Potvrdi porudžbinu' }}
+            </button>
+          </div>
+          @if(this.errorMessage != ''){
+            <div class="stepNav" style="color: red;">
+              {{this.errorMessage}}
+            </div>
+          }
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT: ORDER SUMMARY -->
+      <div class="coSidebar">
+
+        <div class="sidebarCard">
+          <h3>Pregled korpe</h3>
+
+          <div class="sideItems">
+            @for(item of cart.items(); track item.product.id) {
+              <div class="sideItem">
+                <span class="sideItemName">{{ item.product.title }}</span>
+                <span class="sideItemQty">×{{ item.quantity }}</span>
+                <span class="sideItemPrice">{{ item.product.price * item.quantity | number }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="sideDivider"></div>
+
+          <div class="sideTotalRow">
+            <span>Ukupno (bez PDV)</span>
+            <strong>{{ cart.totalPrice() | number }} RSD</strong>
+          </div>
+
+          <div class="sideTotalRow vat">
+            <span>PDV (20%)</span>
+            <strong>{{ cart.totalPrice() * 0.2 | number }} RSD</strong>
+          </div>
+
+          <div class="sideDivider"></div>
+
+          <div class="sideTotalRow grand">
+            <span>Za uplatu</span>
+            <strong>{{ cart.totalPrice() * 1.2 | number }} RSD</strong>
+          </div>
+
+          <div class="sideNote">
+            <span>🔒</span>
+            <p>Vaši podaci su zaštićeni i neće biti prosleđeni trećim licima.</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

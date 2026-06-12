@@ -1,0 +1,74 @@
+<app-navbar></app-navbar>
+
+<div class="shopWrapper">
+
+  <app-cart-icon (click)="toggleCart()"></app-cart-icon>
+
+  <app-cart
+    *ngIf="cartOpen()"
+    (close)="closeCart()">
+  </app-cart>
+
+  <div class="shopOverlay" *ngIf="cartOpen()" (click)="closeCart()"></div>
+
+  <!-- HERO -->
+  <section class="shopHero">
+    <img src="/shophero.png" class="shopHeroImg" alt="Shop">
+    <div class="shopHeroContent">
+      <span class="shopTag">WEBSHOP</span>
+      <h1 class="shopTitle">Naša <span>ponuda</span></h1>
+      <p class="shopSubtitle">Poručite gotove proizvode ili zatražite izradu po meri direktno iz našeg webshopa.</p>
+    </div>
+  </section>
+
+  <!-- SHOP SECTION -->
+  <section class="shopSection" style="border-top: 4px solid #ff6b00;">
+
+    <span class="shopEyebrow">PROIZVODI</span>
+    <h2 class="shopHeading">Izaberite <span>proizvod</span></h2>
+    <p class="shopText">Svi proizvodi su izrađeni sa preciznošću i pažnjom. Moguća izrada po tehničkom crtežu.</p>
+
+    <!-- FILTERS -->
+    <div class="shopFilters">
+      @for(cat of categories; track cat) {
+        <button
+          [class.active]="selectedCategory() === cat"
+          (click)="setCategory(cat)">
+          {{ cat }}
+        </button>
+      }
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="loading()" class="shopLoading">
+      <p>Učitavanje proizvoda...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div *ngIf="errorMsg()" class="shopError">
+      <p>{{ errorMsg() }}</p>
+    </div>
+
+    <!-- GRID -->
+    <div class="shopGrid" *ngIf="!loading() && !errorMsg()">
+      @for(product of filteredProducts(); track product.id) {
+        <app-product-card [product]="product"></app-product-card>
+      }
+      @empty {
+        <p class="shopEmpty">Nema proizvoda u ovoj kategoriji.</p>
+      }
+    </div>
+
+  </section>
+
+  <!-- CTA -->
+  <section class="shopCTA">
+    <span class="shopEyebrow">PO MERI</span>
+    <h2>Niste pronašli što tražite?</h2>
+    <p>Pošaljite nam vaše specifikacije i napravićemo proizvod tačno po vašim zahtevima.</p>
+    <button routerLink="/upit">Pošalji upit</button>
+  </section>
+
+</div>
+
+<app-footer-component></app-footer-component>
