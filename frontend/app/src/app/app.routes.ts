@@ -11,18 +11,20 @@ import { TehnickaPodrskaComponent } from './tehnicka-podrska-component/tehnicka-
 import { GalleryComponent } from './gallery-component/gallery-component';
 import { ShopComponent } from './shop-component/shop-component';
 import { CheckoutComponent } from './checkout-component/checkout-component';
+import { AdminComponent } from './admin-component/admin-component';
 
 export const routes: Routes = [
-    {path: "", component: HomeComponent},
-    {path: "onama", component: OnamaComponent},
-    {path: "upit", component: UpitComponent},
-    {path: "kontakt", component: KontaktComponent},
-    {path: "secenje-usluga", component: SecenjeUslugaComponent},
-    {path: "cnc-savijanje-usluga", component: CncSavijanjeComponent},
-    {path: "lasersko-graviranje-usluga", component: LaserskoGraviranjeComponent},
-    {path: "cad-dizajn-usluga", component: CadUslugaComponent},
-    {path: "tehnicka-podrska-usluga", component: TehnickaPodrskaComponent},
-    {path: "galerija", component: GalleryComponent},
-    {path: "prodavnica", component: ShopComponent},
-    {path: "korpa", component: CheckoutComponent }
+    { path: '', component: HomeComponent },
+    { path: 'onama', component: OnamaComponent },
+    { path: 'upit', component: UpitComponent },
+    { path: 'kontakt', component: KontaktComponent },
+    { path: 'secenje-usluga', component: SecenjeUslugaComponent },
+    { path: 'cnc-savijanje-usluga', component: CncSavijanjeComponent },
+    { path: 'lasersko-graviranje-usluga', component: LaserskoGraviranjeComponent },
+    { path: 'cad-dizajn-usluga', component: CadUslugaComponent },
+    { path: 'tehnicka-podrska-usluga', component: TehnickaPodrskaComponent },
+    { path: 'galerija', component: GalleryComponent },
+    { path: 'prodavnica', component: ShopComponent },
+    { path: 'korpa', component: CheckoutComponent },
+    { path: 'admin', component: AdminComponent }
 ];

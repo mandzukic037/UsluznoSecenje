@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../services/cart-service';
 import { Product } from '../model/product';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-product-card',
@@ -13,6 +14,7 @@ import { Product } from '../model/product';
 export class ProductCardComponent {
   @Input() product!: Product;
   added = false;
+  apiUrl = environment.apiUrl;
 
   constructor(private cart: CartService) {}
 

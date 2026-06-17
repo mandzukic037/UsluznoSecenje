@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { CartService } from '../services/cart-service';
 import { environment } from '../../environments/environment';
+import en from '@angular/common/locales/en';
 
 type Step = 'korpa' | 'dostava' | 'potvrda';
 
@@ -16,6 +17,8 @@ type Step = 'korpa' | 'dostava' | 'potvrda';
   styleUrls: ['./checkout-component.css']
 })
 export class CheckoutComponent {
+
+  apiUrl = environment.apiUrl;
 
   private readonly API_URL = environment.apiUrl + '/api';
 

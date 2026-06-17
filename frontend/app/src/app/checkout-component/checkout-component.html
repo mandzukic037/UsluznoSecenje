@@ -51,7 +51,7 @@
             @for(item of cart.items(); track item.product.id) {
               <div class="checkItem">
 
-                <img [src]="item.product.image" [alt]="item.product.title" class="checkItemImg">
+                <img [src]="apiUrl + item.product.image" [alt]="item.product.title" class="checkItemImg">
 
                 <div class="checkItemInfo">
                   <h4>{{ item.product.title }}</h4>

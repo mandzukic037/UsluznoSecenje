@@ -1,0 +1,781 @@
+<!-- LOGIN -->
+<div *ngIf="!loggedIn()" class="loginWrap">
+  <div class="loginGlow"></div>
+  <div class="loginBox">
+    <div class="loginMark">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <h2>Admin Panel</h2>
+    <p>Uslužno sečenje &mdash; upravljačka tabla</p>
+    <input
+      type="password"
+      [(ngModel)]="loginPass"
+      placeholder="Unesite lozinku"
+      (keyup.enter)="login()"
+      class="loginInput"
+      autofocus
+    />
+    <div class="loginError" [class.show]="loginError">{{ loginError }}</div>
+    <button (click)="login()" class="loginBtn">Prijavi se</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div *ngIf="loggedIn()" class="adminWrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed()">
+    <div class="sidebarTop">
+      <div class="sidebarLogo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <span class="sidebarTitle" *ngIf="!sidebarCollapsed()">Admin</span>
+      </div>
+      <button class="collapseBtn" (click)="toggleSidebar()" [attr.aria-label]="sidebarCollapsed() ? 'Proširi' : 'Skupi'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline [attr.points]="sidebarCollapsed() ? '9 18 15 12 9 6' : '15 18 9 12 15 6'"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebarNav">
+      <button [class.active]="activeTab() === 'dashboard'" (click)="setTab('dashboard')" title="Dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="9" rx="1"/>
+          <rect x="14" y="3" width="7" height="5" rx="1"/>
+          <rect x="14" y="12" width="7" height="9" rx="1"/>
+          <rect x="3" y="16" width="7" height="5" rx="1"/>
+        </svg>
+        <span *ngIf="!sidebarCollapsed()">Dashboard</span>
+      </button>
+
+      <button [class.active]="activeTab() === 'porudzbine'" (click)="setTab('porudzbine')" title="Porudžbine">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16V8z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+          <line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
+        <span *ngIf="!sidebarCollapsed()">Porudžbine</span>
+        <span *ngIf="stats()?.nove && !sidebarCollapsed()" class="badge">{{ stats()?.nove }}</span>
+      </button>
+
+      <button [class.active]="activeTab() === 'proizvodi'" (click)="setTab('proizvodi')" title="Proizvodi">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 7h-3V5a3 3 0 00-3-3h-4a3 3 0 00-3 3v2H4a1 1 0 00-1 1v11a2 2 0 002 2h14a2 2 0 002-2V8a1 1 0 00-1-1zM9 5a1 1 0 011-1h4a1 1 0 011 1v2H9V5z"/>
+        </svg>
+        <span *ngIf="!sidebarCollapsed()">Proizvodi</span>
+      </button>
+
+      <button [class.active]="activeTab() === 'upiti'" (click)="setTab('upiti')" title="Upiti">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+        </svg>
+        <span *ngIf="!sidebarCollapsed()">Upiti</span>
+        <span *ngIf="nepotvrdjenihUpita() && !sidebarCollapsed()" class="badge">{{ nepotvrdjenihUpita() }}</span>
+      </button>
+
+      <button [class.active]="activeTab() === 'statistike'" (click)="setTab('statistike')" title="Statistike">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+        <span *ngIf="!sidebarCollapsed()">Statistike</span>
+      </button>
+    </nav>
+
+    <a routerLink="/" class="siteLink" title="Otvori sajt">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <span *ngIf="!sidebarCollapsed()">Otvori sajt</span>
+    </a>
+
+    <button (click)="logout()" class="logoutBtn" title="Odjavi se">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      <span *ngIf="!sidebarCollapsed()">Odjavi se</span>
+    </button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="adminMain">
+
+    <!-- TOAST -->
+    <div *ngIf="successMsg()" class="toast success">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      {{ successMsg() }}
+    </div>
+    <div *ngIf="errorMsg()" class="toast error">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      {{ errorMsg() }}
+    </div>
+
+    <!-- ===================== DASHBOARD ===================== -->
+    <div *ngIf="activeTab() === 'dashboard'" class="tabContent">
+      <div class="pageHeader">
+        <div>
+          <span class="pageEyebrow">Pregled</span>
+          <h1 class="pageTitle">Dashboard</h1>
+        </div>
+      </div>
+
+      <div class="statsGrid" *ngIf="stats()">
+        <div class="statCard">
+          <div class="statIcon blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16V8z"/></svg>
+          </div>
+          <div class="statNum">{{ stats()?.ukupnoPorudzbina }}</div>
+          <div class="statLabel">Ukupno porudžbina</div>
+        </div>
+
+        <div class="statCard">
+          <div class="statIcon orange">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="statNum">{{ stats()?.nove }}</div>
+          <div class="statLabel">Nove porudžbine</div>
+        </div>
+
+        <div class="statCard">
+          <div class="statIcon yellow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          </div>
+          <div class="statNum">{{ stats()?.uObradi }}</div>
+          <div class="statLabel">U obradi</div>
+        </div>
+
+        <div class="statCard">
+          <div class="statIcon green">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="statNum">{{ stats()?.poslate }}</div>
+          <div class="statLabel">Poslate</div>
+        </div>
+
+        <div class="statCard wide">
+          <div class="statIcon purple">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <div class="statNum">{{ stats()?.ukupanPromet | number:'1.0-0' }} <span class="unit">RSD</span></div>
+          <div class="statLabel">Ukupan promet</div>
+        </div>
+
+        <div class="statCard">
+          <div class="statIcon gray">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-3V5a3 3 0 00-3-3h-4a3 3 0 00-3 3v2H4a1 1 0 00-1 1v11a2 2 0 002 2h14a2 2 0 002-2V8a1 1 0 00-1-1z"/></svg>
+          </div>
+          <div class="statNum">{{ stats()?.ukupnoProizvoda }}</div>
+          <div class="statLabel">Proizvoda u ponudi</div>
+        </div>
+      </div>
+
+      <!-- GRAFIK PROMETA -->
+      <div class="chartCard" *ngIf="prometSeries().length > 1">
+        <div class="chartHeader">
+          <h2>Promet po danima</h2>
+          <span class="chartSub">Poslednjih {{ prometSeries().length }} dana sa porudžbinama</span>
+        </div>
+        <div class="chartBars">
+          <div class="chartBarWrap" *ngFor="let item of prometSeries()">
+            <div class="chartBarTrack">
+              <div class="chartBar" [style.height.%]="item.pct" [title]="item.value + ' RSD'"></div>
+            </div>
+            <span class="chartBarLabel">{{ item.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATUS BREAKDOWN -->
+      <div class="breakdownCard">
+        <h2>Status porudžbina</h2>
+        <div class="breakdownList">
+          <div class="breakdownRow" *ngFor="let s of statusi">
+            <span class="breakdownDot" [style.background]="statusColor(s)"></span>
+            <span class="breakdownLabel">{{ statusLabel(s) }}</span>
+            <div class="breakdownTrack">
+              <div class="breakdownFill"
+                   [style.background]="statusColor(s)"
+                   [style.width.%]="stats()?.ukupnoPorudzbina ? (countByStatus(s) / stats()!.ukupnoPorudzbina * 100) : 0">
+              </div>
+            </div>
+            <span class="breakdownCount">{{ countByStatus(s) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- POSLEDNJE PORUDZBINE -->
+      <div class="recentSection">
+        <div class="recentHeader">
+          <h2>Poslednje porudžbine</h2>
+          <button class="linkBtn" (click)="setTab('porudzbine')">
+            Sve porudžbine
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+        <div class="tableScroll" *ngIf="porudzbine().length > 0">
+          <table class="adminTable">
+            <thead>
+              <tr><th>Porudžbina</th><th>Kupac</th><th>Iznos</th><th>Status</th><th>Datum</th><th></th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of porudzbine().slice(0, 5); trackBy: trackById" (click)="setTab('porudzbine'); selectPorudzbina(p)" class="clickableRow">
+                <td><strong>#{{ p.id }}</strong></td>
+                <td>
+                  <div class="customerCell">
+                    <span class="avatarSm">{{ initials(p.ime, p.prezime) }}</span>
+                    {{ p.ime }} {{ p.prezime }}
+                  </div>
+                </td>
+                <td><strong>{{ p.ukupnoSaPdv | number:'1.0-0' }} RSD</strong></td>
+                <td><span class="statusBadge" [style.background]="statusColor(p.status) + '1a'" [style.color]="statusColor(p.status)">{{ statusLabel(p.status) }}</span></td>
+                <td class="dimText">{{ formatDate(p.kreiranoU) }}</td>
+                <td>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="emptyState" *ngIf="porudzbine().length === 0 && dataLoaded()">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16V8z"/></svg>
+          <p>Još nema porudžbina</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== PORUDZBINE ===================== -->
+    <div *ngIf="activeTab() === 'porudzbine'" class="tabContent">
+
+      <!-- LISTA -->
+      <div *ngIf="!selectedPorudzbina()">
+        <div class="pageHeader">
+          <div>
+            <span class="pageEyebrow">Upravljanje</span>
+            <h1 class="pageTitle">Porudžbine</h1>
+          </div>
+          <button (click)="loadPorudzbine()" class="btnRefresh">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            Osveži
+          </button>
+          <button (click)="exportCSV()" class="btnRefresh">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Izvezi CSV
+          </button>
+        </div>
+
+        <div class="filters">
+          <div class="searchWrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input
+              type="text"
+              placeholder="Pretraži po imenu, emailu ili ID-u..."
+              [value]="searchText()"
+              (input)="searchText.set($any($event.target).value)"
+              class="searchInput"
+            />
+          </div>
+          <div class="filterBtns">
+            <button *ngFor="let s of ['SVE', 'NOVA', 'U_OBRADI', 'POSLATA', 'OTKAZANA']"
+              [class.active]="filterStatus() === s" (click)="filterStatus.set(s)" class="filterBtn">
+              {{ s === 'SVE' ? 'Sve' : statusLabel(s) }}
+            </button>
+          </div>
+        </div>
+
+        <div class="bulkBar" *ngIf="selectedIds().size > 0">
+          <span class="bulkCount">{{ selectedIds().size }} izabrano</span>
+          <select [(ngModel)]="bulkStatus" class="bulkSelect">
+            <option *ngFor="let s of statusi" [value]="s">{{ statusLabel(s) }}</option>
+          </select>
+          <button class="bulkApplyBtn" (click)="applyBulkStatus()">Primeni status</button>
+          <button class="bulkExportBtn" (click)="exportCSV()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Izvezi CSV
+          </button>
+          <button class="bulkCancelBtn" (click)="clearSelection()">Otkaži</button>
+        </div>
+
+        <div class="tableScroll" *ngIf="filteredPorudzbine.length > 0">
+          <table class="adminTable">
+            <thead>
+              <tr>
+                <th><input type="checkbox" [checked]="allFilteredSelected()" (change)="toggleSelectAll()" class="checkbox"></th>
+                <th>Porudžbina</th><th>Kupac</th><th>Kontakt</th><th>Iznos</th><th>Dostava</th><th>Status</th><th>Datum</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of filteredPorudzbine; trackBy: trackById" class="tableRow">
+                <td><input type="checkbox" [checked]="isSelected(p.id)" (change)="toggleSelect(p.id)" class="checkbox" (click)="$event.stopPropagation()"></td>
+                <td><strong>#{{ p.id }}</strong></td>
+                <td>
+                  <div class="customerCell">
+                    <span class="avatarSm">{{ initials(p.ime, p.prezime) }}</span>
+                    <div>
+                      {{ p.ime }} {{ p.prezime }}
+                      <small *ngIf="p.firma" class="dimText block">{{ p.firma }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td class="dimText">{{ p.email }}<br><span class="block">{{ p.telefon }}</span></td>
+                <td><strong>{{ p.ukupnoSaPdv | number:'1.0-0' }} RSD</strong></td>
+                <td class="dimText">{{ p.nacinDostave }}</td>
+                <td>
+                  <select (change)="updateStatus(p, $any($event.target).value)" class="statusSelect" [style.color]="statusColor(p.status)">
+                    <option *ngFor="let s of statusi" [value]="s" [selected]="s === p.status">{{ statusLabel(s) }}</option>
+                  </select>
+                </td>
+                <td class="dimText">{{ formatDate(p.kreiranoU) }}</td>
+                <td class="actionBtns">
+                  <button class="iconBtn" (click)="selectPorudzbina(p)" title="Detalji">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                  <button class="iconBtn danger" (click)="askDeletePorudzbina(p)" title="Obriši">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="emptyState" *ngIf="filteredPorudzbine.length === 0">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <p>Nema porudžbina koje odgovaraju pretrazi</p>
+        </div>
+      </div>
+
+      <!-- DETALJI PORUDZBINE -->
+      <div *ngIf="selectedPorudzbina()" class="detaljiWrap">
+        <button (click)="closeDetalji()" class="backBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Nazad na listu
+        </button>
+
+        <div class="detaljiHeader">
+          <div class="detaljiTitleWrap">
+            <span class="avatarLg">{{ initials(selectedPorudzbina()!.ime, selectedPorudzbina()!.prezime) }}</span>
+            <div>
+              <h1>Porudžbina #{{ selectedPorudzbina()!.id }}</h1>
+              <span class="dimText">{{ selectedPorudzbina()!.ime }} {{ selectedPorudzbina()!.prezime }} &middot; {{ formatDate(selectedPorudzbina()!.kreiranoU) }}</span>
+            </div>
+          </div>
+          <span class="statusBadge large" [style.background]="statusColor(selectedPorudzbina()!.status) + '1a'" [style.color]="statusColor(selectedPorudzbina()!.status)">
+            {{ statusLabel(selectedPorudzbina()!.status) }}
+          </span>
+        </div>
+
+        <div class="detaljiGrid">
+          <div class="detaljiCard">
+            <h3>Kupac</h3>
+            <div class="detaljiRow"><span>Ime</span><strong>{{ selectedPorudzbina()!.ime }} {{ selectedPorudzbina()!.prezime }}</strong></div>
+            <div class="detaljiRow"><span>Email</span><strong>{{ selectedPorudzbina()!.email }}</strong></div>
+            <div class="detaljiRow"><span>Telefon</span><strong>{{ selectedPorudzbina()!.telefon }}</strong></div>
+            <div class="detaljiRow" *ngIf="selectedPorudzbina()!.firma"><span>Firma</span><strong>{{ selectedPorudzbina()!.firma }}</strong></div>
+            <div class="detaljiRow" *ngIf="selectedPorudzbina()!.pib"><span>PIB</span><strong>{{ selectedPorudzbina()!.pib }}</strong></div>
+          </div>
+
+          <div class="detaljiCard">
+            <h3>Dostava</h3>
+            <div class="detaljiRow"><span>Način</span><strong>{{ selectedPorudzbina()!.nacinDostave }}</strong></div>
+            <div class="detaljiRow"><span>Adresa</span><strong>{{ selectedPorudzbina()!.adresa }}</strong></div>
+            <div class="detaljiRow"><span>Grad</span><strong>{{ selectedPorudzbina()!.postBroj }} {{ selectedPorudzbina()!.grad }}</strong></div>
+            <div class="detaljiRow"><span>Plaćanje</span><strong>{{ selectedPorudzbina()!.placanje }}</strong></div>
+          </div>
+
+          <div class="detaljiCard">
+            <h3>Iznos</h3>
+            <div class="detaljiRow"><span>Bez PDV</span><strong>{{ selectedPorudzbina()!.ukupnoBezPdv | number:'1.0-0' }} RSD</strong></div>
+            <div class="detaljiRow"><span>PDV (20%)</span><strong>{{ selectedPorudzbina()!.pdv | number:'1.0-0' }} RSD</strong></div>
+            <div class="detaljiRow total"><span>Ukupno</span><strong>{{ selectedPorudzbina()!.ukupnoSaPdv | number:'1.0-0' }} RSD</strong></div>
+          </div>
+
+          <div class="detaljiCard" *ngIf="selectedPorudzbina()!.napomena">
+            <h3>Napomena</h3>
+            <p class="napomenaText">{{ selectedPorudzbina()!.napomena }}</p>
+          </div>
+        </div>
+
+        <div class="stavkeWrap">
+          <h3>Stavke porudžbine</h3>
+          <table class="adminTable">
+            <thead><tr><th>Naziv</th><th>Količina</th><th>Cena/kom</th><th>Ukupno</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let s of selectedPorudzbina()!.stavke">
+                <td>{{ s.naziv }}</td>
+                <td>{{ s.kolicina }}</td>
+                <td class="dimText">{{ s.cena | number:'1.0-0' }} RSD</td>
+                <td><strong>{{ s.cena * s.kolicina | number:'1.0-0' }} RSD</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="statusActions">
+          <h3>Promeni status</h3>
+          <div class="statusBtns">
+            <button *ngFor="let s of statusi" (click)="updateStatus(selectedPorudzbina()!, s)"
+              [class.active]="selectedPorudzbina()!.status === s"
+              [style.border-color]="statusColor(s)"
+              [style.color]="selectedPorudzbina()!.status === s ? '#0F1115' : statusColor(s)"
+              [style.background]="selectedPorudzbina()!.status === s ? statusColor(s) : 'transparent'"
+              class="statusActionBtn">
+              {{ statusLabel(s) }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== PROIZVODI ===================== -->
+    <div *ngIf="activeTab() === 'proizvodi'" class="tabContent">
+      <div class="pageHeader">
+        <div>
+          <span class="pageEyebrow">Katalog</span>
+          <h1 class="pageTitle">Proizvodi</h1>
+        </div>
+        <button (click)="openNewProduct()" class="btnAdd">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Dodaj proizvod
+        </button>
+      </div>
+
+      <div class="tableScroll" *ngIf="proizvodi().length > 0">
+        <table class="adminTable">
+          <thead><tr><th></th><th>Naziv</th><th>Kategorija</th><th>Cena</th><th>Materijal</th><th>Debljina</th><th></th></tr></thead>
+          <tbody>
+            <tr *ngFor="let p of proizvodi(); trackBy: trackById">
+              <td><img [src]="p.image" [alt]="p.title" class="productThumb" onerror="this.style.visibility='hidden'"></td>
+              <td><strong>{{ p.title }}</strong><br><small class="dimText">{{ p.description | slice:0:55 }}{{ p.description.length > 55 ? '…' : '' }}</small></td>
+              <td class="dimText">{{ p.category }}</td>
+              <td><strong>{{ p.price | number:'1.0-0' }} RSD</strong></td>
+              <td class="dimText">{{ p.material || '—' }}</td>
+              <td class="dimText">{{ p.thickness || '—' }}</td>
+              <td class="actionBtns">
+                <button class="iconBtn" (click)="openEditProduct(p)" title="Izmeni">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="iconBtn" (click)="duplicateProduct(p)" title="Dupliraj">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                </button>
+                <button class="iconBtn danger" (click)="askDeleteProduct(p)" title="Obriši">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="emptyState" *ngIf="proizvodi().length === 0">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7h-3V5a3 3 0 00-3-3h-4a3 3 0 00-3 3v2H4a1 1 0 00-1 1v11a2 2 0 002 2h14a2 2 0 002-2V8a1 1 0 00-1-1z"/></svg>
+        <p>Nema dodatih proizvoda</p>
+        <button (click)="openNewProduct()" class="btnAdd">Dodaj prvi proizvod</button>
+      </div>
+
+      <!-- FORMA -->
+      <div *ngIf="showProductForm()" class="modalOverlay" (click)="closeProductForm()">
+        <div class="modal" (click)="$event.stopPropagation()">
+          <div class="modalHeader">
+            <h2>{{ editingProduct() ? 'Izmeni proizvod' : 'Novi proizvod' }}</h2>
+            <button (click)="closeProductForm()" class="closeBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <div class="formGrid">
+            <div class="formGroup full">
+              <label>Naziv</label>
+              <input [(ngModel)]="productForm.title" placeholder="Naziv proizvoda">
+            </div>
+            <div class="formGroup">
+              <label>Kategorija</label>
+              <select [(ngModel)]="productForm.category">
+                <option *ngFor="let k of kategorije" [value]="k">{{ k }}</option>
+              </select>
+            </div>
+            <div class="formGroup">
+              <label>Cena (RSD)</label>
+              <input type="number" [(ngModel)]="productForm.price" placeholder="0">
+            </div>
+            <div class="formGroup full">
+              <label>Slika proizvoda</label>
+
+              <div class="imageUploadBox" *ngIf="!imagePreview()">
+                <input
+                  type="file"
+                  accept="image/*"
+                  (change)="onImageSelected($event)"
+                  class="hiddenFileInput"
+                  id="productImageInput"
+                >
+                <label for="productImageInput" class="uploadLabel">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  <span>Klikni da otpremiš sliku</span>
+                  <small>PNG, JPG do 10MB</small>
+                </label>
+              </div>
+
+              <div class="imagePreviewBox" *ngIf="imagePreview()">
+                <img [src]="imagePreview()" class="imagePreviewImg" alt="Pregled slike">
+
+                <div class="uploadOverlay" *ngIf="uploadingImage()">
+                  <div class="uploadProgressRing">{{ uploadProgress() }}%</div>
+                </div>
+
+                <button type="button" class="removeImageBtn" (click)="removeImage()" *ngIf="!uploadingImage()" title="Ukloni sliku">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+
+                <label for="productImageInput2" class="replaceImageBtn" *ngIf="!uploadingImage()">
+                  Promeni sliku
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  (change)="onImageSelected($event)"
+                  class="hiddenFileInput"
+                  id="productImageInput2"
+                >
+              </div>
+            </div>
+            <div class="formGroup full">
+              <label>Opis</label>
+              <textarea [(ngModel)]="productForm.description" rows="3" placeholder="Opis proizvoda"></textarea>
+            </div>
+            <div class="formGroup">
+              <label>Materijal</label>
+              <input [(ngModel)]="productForm.material" placeholder="Čelik, aluminijum...">
+            </div>
+            <div class="formGroup">
+              <label>Debljina</label>
+              <input [(ngModel)]="productForm.thickness" placeholder="1mm - 10mm">
+            </div>
+          </div>
+
+          <div class="modalFooter">
+            <button (click)="closeProductForm()" class="btnCancel">Odustani</button>
+            <button (click)="saveProduct()" class="btnSave">{{ editingProduct() ? 'Sačuvaj izmene' : 'Dodaj proizvod' }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== UPITI ===================== -->
+    <div *ngIf="activeTab() === 'upiti'" class="tabContent">
+
+      <!-- LISTA UPITA -->
+      <div *ngIf="!selectedUpit()">
+        <div class="pageHeader">
+          <div>
+            <span class="pageEyebrow">Upiti</span>
+            <h1 class="pageTitle">Svi upiti</h1>
+          </div>
+        </div>
+
+        <div class="tableScroll">
+          <table class="adminTable">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Ime i prezime</th>
+                <th>Email</th>
+                <th>Usluga</th>
+                <th>Datum</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let u of upiti(); trackBy: trackById"
+                [class.unread]="!u.procitan"
+                (click)="openUpit(u)"
+                style="cursor:pointer"
+              >
+                <td>
+                  <span class="statusBadge"
+                    [style.background]="u.procitan ? '#6B728020' : '#3b82f620'"
+                    [style.color]="u.procitan ? '#6B7280' : '#3b82f6'">
+                    {{ u.procitan ? 'Pročitan' : 'Novo' }}
+                  </span>
+                </td>
+                <td><strong>{{ u.ime }} {{ u.prezime }}</strong></td>
+                <td class="dimText">{{ u.mail }}</td>
+                <td class="dimText">{{ u.usluga }}</td>
+                <td class="dimText">{{ formatDate(u.kreiranoU) }}</td>
+                <td class="actionBtns">
+                  <button class="iconBtn danger" (click)="$event.stopPropagation(); deleteUpit(u.id)" title="Obriši">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="emptyState" *ngIf="upiti().length === 0 && dataLoaded()">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+            <p>Nema upita</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETALJI UPITA -->
+      <div *ngIf="selectedUpit()" class="detaljiWrap">
+        <button (click)="closeUpit()" class="backBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Nazad na listu
+        </button>
+
+        <div class="detaljiHeader">
+          <div class="detaljiTitleWrap">
+            <span class="avatarLg">{{ initials(selectedUpit()!.ime, selectedUpit()!.prezime) }}</span>
+            <div>
+              <h1>{{ selectedUpit()!.ime }} {{ selectedUpit()!.prezime }}</h1>
+              <span class="dimText">{{ selectedUpit()!.usluga }} &middot; {{ formatDate(selectedUpit()!.kreiranoU) }}</span>
+            </div>
+          </div>
+          <span class="statusBadge large"
+            [style.background]="selectedUpit()!.procitan ? '#6B728020' : '#3b82f620'"
+            [style.color]="selectedUpit()!.procitan ? '#6B7280' : '#3b82f6'">
+            {{ selectedUpit()!.procitan ? 'Pročitan' : 'Novo' }}
+          </span>
+        </div>
+
+        <div class="detaljiGrid">
+          <div class="detaljiCard">
+            <h3>Kontakt</h3>
+            <div class="detaljiRow"><span>Email</span><strong>{{ selectedUpit()!.mail }}</strong></div>
+            <div class="detaljiRow"><span>Telefon</span><strong>{{ selectedUpit()!.telefon }}</strong></div>
+            <div class="detaljiRow"><span>Usluga</span><strong>{{ selectedUpit()!.usluga }}</strong></div>
+          </div>
+        </div>
+
+        <div class="stavkeWrap">
+          <h3>Poruka</h3>
+          <p class="napomenaText">{{ selectedUpit()!.opis }}</p>
+        </div>
+
+        <!-- PRILOŽENI FAJLOVI — unutar detalji diva -->
+        <div class="stavkeWrap" *ngIf="selectedUpit()!.fajlovi && selectedUpit()!.fajlovi!.length > 0">
+          <h3>Priloženi fajlovi</h3>
+          <div class="upit-images">
+            <ng-container *ngFor="let f of selectedUpit()!.fajlovi">
+              <img
+                *ngIf="isImage(f.putanja)"
+                [src]="apiUrl + f.putanja"
+                [alt]="f.naziv"
+                style="max-width:200px; max-height:200px; border-radius:8px; margin:4px; object-fit:cover; border:1px solid #2a2a2a;"
+              />
+              
+               <a>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                {{ f.naziv }}
+              </a>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="statusActions">
+          <div class="upitActionsRow">
+            <a [href]="replyMailto(selectedUpit()!)" class="btnSave upitReplyBtn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Odgovori putem mail-a
+            </a>
+            <button class="btnDelete" (click)="deleteUpit(selectedUpit()!.id)">Obriši upit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== STATISTIKE ===================== -->
+    <div *ngIf="activeTab() === 'statistike'" class="tabContent">
+      <div class="pageHeader">
+        <div>
+          <span class="pageEyebrow">Analitika</span>
+          <h1 class="pageTitle">Statistike</h1>
+        </div>
+      </div>
+
+      <div class="statGridTwoCol">
+        <div class="breakdownCard">
+          <h2>Najprodavaniji proizvodi</h2>
+          <div class="breakdownList" *ngIf="topProizvodi().length > 0">
+            <div class="breakdownRow" *ngFor="let item of topProizvodi()">
+              <span class="breakdownLabel wide">{{ item.naziv }}</span>
+              <div class="breakdownTrack">
+                <div class="breakdownFill" style="background:#FF6B00" [style.width.%]="(item.promet / maxProizvodPromet()) * 100"></div>
+              </div>
+              <span class="breakdownCount wide">{{ item.promet | number:'1.0-0' }} RSD</span>
+            </div>
+          </div>
+          <div class="emptyState small" *ngIf="topProizvodi().length === 0">
+            <p>Nema podataka još</p>
+          </div>
+        </div>
+
+        <div class="breakdownCard">
+          <h2>Top kupci po prometu</h2>
+          <div class="breakdownList" *ngIf="topKupciList().length > 0">
+            <div class="breakdownRow" *ngFor="let k of topKupciList()">
+              <span class="breakdownLabel wide">{{ k.ime }}</span>
+              <div class="breakdownTrack">
+                <div class="breakdownFill" style="background:#16a34a" [style.width.%]="(k.promet / maxKupacPromet()) * 100"></div>
+              </div>
+              <span class="breakdownCount wide">{{ k.promet | number:'1.0-0' }} RSD</span>
+            </div>
+          </div>
+          <div class="emptyState small" *ngIf="topKupciList().length === 0">
+            <p>Nema podataka još</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="chartCard" *ngIf="prometSeries().length > 1">
+        <div class="chartHeader">
+          <h2>Promet po danima</h2>
+          <span class="chartSub">Poslednjih {{ prometSeries().length }} dana sa porudžbinama</span>
+        </div>
+        <div class="chartBars">
+          <div class="chartBarWrap" *ngFor="let item of prometSeries()">
+            <div class="chartBarTrack">
+              <div class="chartBar" [style.height.%]="item.pct" [title]="item.value + ' RSD'"></div>
+            </div>
+            <span class="chartBarLabel">{{ item.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIRM DELETE MODAL -->
+    <div *ngIf="confirmDelete()" class="modalOverlay" (click)="cancelDelete()">
+      <div class="confirmModal" (click)="$event.stopPropagation()">
+        <div class="confirmIcon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h3>Potvrda brisanja</h3>
+        <p>Da li ste sigurni da želite da obrišete {{ confirmDelete()?.label }}? Ova akcija se ne može opozvati.</p>
+        <div class="confirmActions">
+          <button (click)="cancelDelete()" class="btnCancel">Odustani</button>
+          <button (click)="confirmDeleteAction()" class="btnDelete">Obriši</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>

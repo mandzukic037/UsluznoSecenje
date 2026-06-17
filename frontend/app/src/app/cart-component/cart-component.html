@@ -17,7 +17,7 @@
     @for(item of cart.items(); track item.product.id) {
       <div class="cartItem">
 
-        <img [src]="item.product.image" [alt]="item.product.title" class="itemImg">
+        <img [src]="apiUrl + item.product.image" [alt]="item.product.title" class="itemImg">
 
         <div class="itemInfo">
           <h4>{{ item.product.title }}</h4>

@@ -1,6 +1,7 @@
 package com.usluznosecenje.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "porudzbine_stavke")
@@ -17,6 +18,7 @@ public class PorudzbineStavka {
 
     @ManyToOne
     @JoinColumn(name = "porudzbina_id")
+    @JsonIgnore
     private Porudzbina porudzbina;
 
     public Long getId() { return id; }

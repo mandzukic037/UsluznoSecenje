@@ -7,7 +7,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CorsConfig {
-
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -16,8 +15,7 @@ public class CorsConfig {
                 registry.addMapping("/api/**")
                         .allowedOrigins(
                             "http://localhost:4200",
-                            "https://usluznosecenje.rs",
-                            "https://usluzno-secenje-okzc.vercel.app"
+                            "https://usluznosecenje.rs"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");

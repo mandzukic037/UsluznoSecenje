@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../services/cart-service';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-cart',
@@ -12,6 +13,7 @@ import { RouterLink } from '@angular/router';
 })
 export class CartComponent {
   @Output() close = new EventEmitter<void>();
+  apiUrl = environment.apiUrl;
 
   constructor(public cart: CartService) {}
 
