@@ -39,25 +39,29 @@
       }
     </div>
 
-    <!-- LOADING -->
-    <div *ngIf="loading()" class="shopLoading">
-      <p>Učitavanje proizvoda...</p>
-    </div>
-
-    <!-- ERROR -->
-    <div *ngIf="errorMsg()" class="shopError">
-      <p>{{ errorMsg() }}</p>
-    </div>
-
-    <!-- GRID -->
-    <div class="shopGrid" *ngIf="!loading() && !errorMsg()">
-      @for(product of filteredProducts(); track product.id) {
-        <app-product-card [product]="product"></app-product-card>
-      }
-      @empty {
-        <p class="shopEmpty">Nema proizvoda u ovoj kategoriji.</p>
-      }
-    </div>
+    @if (loading()) {
+      <div class="skeletonGrid">
+        <div class="skeletonItem"></div>
+        <div class="skeletonItem"></div>
+        <div class="skeletonItem"></div>
+        <div class="skeletonItem"></div>
+        <div class="skeletonItem"></div>
+        <div class="skeletonItem"></div>
+      </div>
+    } @else if (errorMsg()) {
+      <div class="shopError">
+        <p>{{ errorMsg() }}</p>
+      </div>
+    } @else {
+      <div class="shopGrid">
+        @for(product of filteredProducts(); track product.id) {
+          <app-product-card [product]="product"></app-product-card>
+        }
+        @empty {
+          <p class="shopEmpty">Nema proizvoda u ovoj kategoriji.</p>
+        }
+      </div>
+    }
 
   </section>
 

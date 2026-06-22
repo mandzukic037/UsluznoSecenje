@@ -1,11 +1,11 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { RouterModule } from '@angular/router';
 
-type AdminTab = 'dashboard' | 'porudzbine' | 'proizvodi' | 'upiti' | 'statistike';
+type AdminTab = 'dashboard' | 'porudzbine' | 'proizvodi' | 'upiti' | 'statistike' | 'galerija';
 
 interface UpitFajl {
   id: number;
@@ -90,7 +90,7 @@ interface Stats {
   templateUrl: './admin-component.html',
   styleUrls: ['./admin-component.css']
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
   apiUrl = environment.apiUrl;
 
   private readonly API = environment.apiUrl + '/api/admin';
@@ -163,6 +163,10 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.stopPolling();
+  }
+
   // =====================
   // AUTH
   // =====================
@@ -199,8 +203,11 @@ export class AdminComponent implements OnInit {
     this.loadProizvodi();
     this.loadUpiti();
     this.loadProductStats();
+    this.loadGalerija();
+    this.startPolling();
     setTimeout(() => this.dataLoaded.set(true), 250);
   }
+
 
   loadStats() {
     this.http.get<Stats>(`${this.API}/stats`).subscribe({ next: s => this.stats.set(s) });
@@ -222,7 +229,9 @@ export class AdminComponent implements OnInit {
     this.activeTab.set(tab);
     this.selectedPorudzbina.set(null);
     this.clearSelection();
+    if (tab === 'galerija') this.loadGalerija();
   }
+
 
   // =====================
   // PORUDZBINE
@@ -601,6 +610,137 @@ export class AdminComponent implements OnInit {
   allFilteredSelected(): boolean {
     const visible = this.filteredPorudzbine;
     return visible.length > 0 && visible.every(p => this.selectedIds().has(p.id));
+  }
+
+  
+  // =====================
+  // NOTIFIKACIJE
+  // =====================
+  private pollingInterval: any;
+  private lastPorudzbinaId = signal(0);
+  private lastUpitId = signal(0);
+  notifSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFhYB7eHZ2eHuAhoqKhoB7eHZ2eHuAhoqKhYB7eHZ2eHuAhoqK');
+
+  startPolling() {
+    this.pollingInterval = setInterval(() => {
+      this.checkNovePorudzbine();
+      this.checkNoveUpite();
+    }, 30000);
+  }
+
+  stopPolling() {
+    if (this.pollingInterval) clearInterval(this.pollingInterval);
+  }
+
+  checkNovePorudzbine() {
+    this.http.get<any[]>(`${this.API}/porudzbine`).subscribe({
+      next: (list) => {
+        const maxId = list.length > 0 ? Math.max(...list.map(p => p.id)) : 0;
+        if (this.lastPorudzbinaId() > 0 && maxId > this.lastPorudzbinaId()) {
+          this.showNotif('Nova porudžbina stigla!', 'porudzbina');
+          this.porudzbine.set(list);
+          this.loadStats();
+        }
+        this.lastPorudzbinaId.set(maxId);
+      }
+    });
+  }
+
+  checkNoveUpite() {
+    this.http.get<any[]>(`${this.API}/upiti`).subscribe({
+      next: (list) => {
+        const maxId = list.length > 0 ? Math.max(...list.map(u => u.id)) : 0;
+        if (this.lastUpitId() > 0 && maxId > this.lastUpitId()) {
+          this.showNotif('Novi upit stigao!', 'upit');
+          this.upiti.set(list);
+        }
+        this.lastUpitId.set(maxId);
+      }
+    });
+  }
+
+  notifToasts = signal<{id: number; msg: string; type: string}[]>([]);
+  private notifCounter = 0;
+
+  showNotif(msg: string, type: string) {
+    const id = ++this.notifCounter;
+    this.notifToasts.update(list => [...list, { id, msg, type }]);
+    try { this.notifSound.play(); } catch(e) {}
+    setTimeout(() => {
+      this.notifToasts.update(list => list.filter(n => n.id !== id));
+    }, 5000);
+  }
+
+  dismissNotif(id: number) {
+    this.notifToasts.update(list => list.filter(n => n.id !== id));
+  }
+
+  // =====================
+  // GALERIJA
+  // =====================
+  galerijaItems = signal<any[]>([]);
+  galerijaDragging = signal(false);
+  galerijaNaziv = signal('');
+  galerijKategorija = signal('Lasersko sečenje');
+  galerijaUploading = signal(false);
+
+  loadGalerija() {
+    this.http.get<any[]>(environment.apiUrl + '/api/gallery').subscribe({
+      next: items => this.galerijaItems.set(items)
+    });
+  }
+
+  onGalerijaDrop(event: DragEvent) {
+    event.preventDefault();
+    this.galerijaDragging.set(false);
+    const file = event.dataTransfer?.files[0];
+    if (file) this.uploadGalerijaSlika(file);
+  }
+
+  onGalerijaFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) this.uploadGalerijaSlika(file);
+  }
+
+  uploadGalerijaSlika(file: File) {
+    if (!this.galerijaNaziv().trim()) {
+      this.showError('Unesite naziv pre uploada');
+      return;
+    }
+    this.galerijaUploading.set(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.http.post<{path: string}>(`${this.API}/upload/image`, formData).subscribe({
+      next: (res) => {
+        const item = {
+          image: res.path,
+          title: this.galerijaNaziv(),
+          category: this.galerijKategorija()
+        };
+        this.http.post(environment.apiUrl + '/api/gallery', item).subscribe({
+          next: () => {
+            this.loadGalerija();
+            this.galerijaNaziv.set('');
+            this.galerijaUploading.set(false);
+            this.showSuccess('Slika dodata u galeriju');
+          }
+        });
+      },
+      error: () => {
+        this.galerijaUploading.set(false);
+        this.showError('Greška pri uploadu');
+      }
+    });
+  }
+
+  deleteGalerijaItem(id: number) {
+    this.http.delete(environment.apiUrl + '/api/gallery/' + id).subscribe({
+      next: () => {
+        this.galerijaItems.update(list => list.filter(i => i.id !== id));
+        this.showSuccess('Slika obrisana');
+      }
+    });
   }
 
 }

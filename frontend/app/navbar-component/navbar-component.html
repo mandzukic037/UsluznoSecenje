@@ -1,0 +1,60 @@
+<section class="navSection">
+  <nav class="homeNav">
+    <div class="navDiv">
+
+      <a routerLink="/">
+        <img src="logo.png" alt="Logo" class="nav-logo-img" />
+      </a>
+
+      <div class="nav-links">
+        <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Početna</a>
+        <a routerLink="/onama" routerLinkActive="active-link">O nama</a>
+
+        <div class="nav-dropdown">
+          <a class="nav-dropdown-toggle">Usluge <span class="nav-arrow">▾</span></a>
+          <div class="nav-dropdown-menu">
+            <a routerLink="/secenje-usluga">Lasersko sečenje</a>
+            <a routerLink="/cnc-savijanje-usluga">CNC savijanje</a>
+            <a routerLink="/lasersko-graviranje-usluga">Lasersko graviranje</a>
+            <a routerLink="/cad-dizajn-usluga">CAD & Design</a>
+            <a routerLink="/tehnicka-podrska-usluga">Tehničko podrška</a>
+          </div>
+        </div>
+
+        <a routerLink="/kontakt" routerLinkActive="active-link">Kontakt</a>
+        <a routerLink="/galerija" routerLinkActive="active-link">Galerija</a>
+        <a routerLink="/prodavnica" routerLinkActive="active-link">Prodavnica</a>
+      </div>
+
+      <button class="nav-btn" routerLink="/upit">Pošalji upit</button>
+
+      <button class="nav-toggle" (click)="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+
+    </div>
+  </nav>
+
+  <div class="nav-mobile" [class.open]="menuOpen">
+    <a routerLink="/">Početna</a>
+    <a routerLink="/onama">O nama</a>
+
+    <a (click)="toggleMobileUsluge()">
+      Usluge <span class="nav-arrow" [class.open]="mobileUslugeOpen">▾</span>
+    </a>
+
+    <div class="mobile-dropdown-menu" [class.open]="mobileUslugeOpen">
+      <a routerLink="/secenje-usluga" (click)="toggleMenu()">Lasersko sečenje</a>
+      <a routerLink="/cnc-savijanje-usluga" (click)="toggleMenu()">CNC savijanje</a>
+      <a routerLink="/lasersko-graviranje-usluga" (click)="toggleMenu()">Lasersko graviranje</a>
+      <a routerLink="/cad-dizajn-usluga" (click)="toggleMenu()">CAD & Design</a>
+      <a routerLink="/tehnicka-podrska-usluga" (click)="toggleMenu()">Tehničko podrška</a>
+    </div>
+
+    <a routerLink="/kontakt" (click)="toggleMenu()">Kontakt</a>
+    <a routerLink="/galerija" (click)="toggleMenu()">Galerija</a>
+    <a routerLink="/prodavnica" (click)="toggleMenu()">Prodavnica</a>
+
+    <button class="nav-btn" routerLink="/upit">Pošalji upit</button>
+  </div>
+</section>

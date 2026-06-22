@@ -1,0 +1,69 @@
+
+  <section
+  class="carousel"
+  (touchstart)="onTouchStart($event)"
+  (touchend)="onTouchEnd($event)"
+  tabindex="0"
+>
+<a href="/galerija">
+  <!-- Slides -->
+  <div class="carousel__track">
+    <div
+      *ngFor="let slide of slides; let i = index"
+      class="carousel__slide"
+      [class.is-active]="i === currentIndex"
+      [class.is-prev]="i === previousIndex"
+      [class.is-next]="i === nextIndex"
+      [class.dir-left]="direction === 'left'"
+      [class.dir-right]="direction === 'right'"
+    >
+      <img
+        class="carousel__image"
+        [src]="slide.image"
+        [alt]="slide.title"
+        loading="lazy"
+      />
+      <div class="carousel__overlay"></div>
+
+      <div class="carousel__content" [class.is-visible]="i === currentIndex">
+        <!--<span class="carousel__tag">{{ slide.tag }}</span>
+        <h2 class="carousel__title">{{ slide.title }}</h2>
+        <p class="carousel__subtitle">{{ slide.subtitle }}</p>-->
+      </div>
+    </div>
+  </div>
+</a>
+  <!-- Controls -->
+  <button
+    class="carousel__btn carousel__btn--prev"
+    (click)="prev()"
+    aria-label="Prethodni"
+  >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  </button>
+
+  <button
+    class="carousel__btn carousel__btn--next"
+    (click)="next()"
+    aria-label="Sljedeći"
+  >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  </button>
+
+  <!-- Dots -->
+  <div class="carousel__dots">
+    <button
+      *ngFor="let slide of slides; let i = index"
+      class="carousel__dot"
+      [class.is-active]="i === currentIndex"
+      (click)="goTo(i)"
+      [attr.aria-label]="'Idi na slajd ' + (i + 1)"
+    ></button>
+  </div>
+
+</section>
+

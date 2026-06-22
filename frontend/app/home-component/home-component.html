@@ -1,0 +1,283 @@
+<app-navbar></app-navbar>
+
+<section class="homeBanner">
+  <video
+    #bgVideo
+    muted
+    loop
+    playsinline
+    autoplay
+    preload="auto"
+    class="banner-video">
+
+    <source src="/hero.mp4" type="video/mp4">
+  </video>
+
+  <span class="banner-tag">Dobrodošli</span>
+  <h1 class="banner-h1">Uslužno lasersko sečenje<br>i savijanje</h1>
+  <p class="banner-sub">Doljane bb</p>
+  <div class="banner-cta">
+    <button class="btn-primary" routerLink="/upit">Pošalji upit</button>
+    <button class="btn-ghost" (click)="scrollTo('usluge')">Pogledaj usluge</button>
+  </div>
+</section>
+
+<div class="sv-wrap" id = "usluge">
+  <span class="sv-eyebrow">Naše usluge</span>
+  <h2 class="sv-heading">Eksperti za obradu <span>metala</span><br>i projektovanje</h2>
+  <p class="sv-sub">Prepoznati širom industrije već duže od 30 godina — od preciznog laserskog sečenja do kompleksnog CAD dizajna.</p>
+
+  <div class="sv-grid">
+    <a  class="service-card-link" routerLink="/secenje-usluga">
+      <div class="sv-card">
+        <span class="sv-num">01</span>
+        <div class="sv-icon-wrap">
+          <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="1" width="6" height="10" rx="1.5" stroke="#FF6B00" stroke-width="1.4"/>
+            <line x1="13" y1="11" x2="13" y2="17" stroke="#FF6B00" stroke-width="1.4" stroke-dasharray="1.5 1.5"/>
+            <line x1="6" y1="15" x2="20" y2="15" stroke="#FF6B00" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M9 18 L13 25 L17 18" fill="none" stroke="#FF6B00" stroke-width="1.6" stroke-linejoin="round"/>
+            <circle cx="13" cy="17" r="1.5" fill="#FF6B00"/>
+            <line x1="3" y1="18" x2="23" y2="18" stroke="#6B7280" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="sv-card-title">Lasersko sečenje</p>
+        <p class="sv-card-desc">Preciznost i mogućnost dobijanja nepravilnih spoljašnjih oblika, ali i glatkih i sjajnih ivica na svakom komadu.</p>
+      </div>
+    </a>
+
+    <a  class="service-card-link" routerLink="/cnc-savijanje-usluga">
+      <div class="sv-card">
+        <span class="sv-num">02</span>
+        <div class="sv-icon-wrap">
+          <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="15" width="22" height="4" rx="1" stroke="#6B7280" stroke-width="1.2"/>
+            <path d="M5 15 L13 5 L21 15" fill="none" stroke="#FF6B00" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M9 15 L13 9 L17 15" fill="none" stroke="#FF6B00" stroke-width="1.2" stroke-linejoin="round" opacity="0.5"/>
+            <line x1="2" y1="22" x2="24" y2="22" stroke="#6B7280" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="13" cy="5" r="2" fill="#FF6B00"/>
+          </svg>
+        </div>
+        <p class="sv-card-title">CNC savijanje</p>
+        <p class="sv-card-desc">Savijanje lima pod uglom gde se lim postavlja između prizme i noža — rezultat je čist, precizan ugao svaki put.</p>
+      </div>
+    </a>
+
+
+    <a  class="service-card-link" routerLink="/lasersko-graviranje-usluga">
+      <div class="sv-card">
+        <span class="sv-num">03</span>
+        <div class="sv-icon-wrap">
+          <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="13" width="20" height="10" rx="1.5" stroke="#6B7280" stroke-width="1.2"/>
+            <line x1="7" y1="17.5" x2="13" y2="17.5" stroke="#FF6B00" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="7" y1="20" x2="16" y2="20" stroke="#FF6B00" stroke-width="1" stroke-linecap="round" opacity="0.45"/>
+            <rect x="10" y="2" width="6" height="10" rx="1.5" stroke="#FF6B00" stroke-width="1.4"/>
+            <line x1="13" y1="12" x2="13" y2="13" stroke="#FF6B00" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="13" cy="13" r="1.2" fill="#FF6B00"/>
+          </svg>
+        </div>
+        <p class="sv-card-title">Lasersko graviranje</p>
+        <p class="sv-card-desc">Najnovija tehnologija graviranja materijala koja omogućava izradu i najzahtevnijih i najsitnijih detalja.</p>
+      </div>
+    </a>
+
+    <a  class="service-card-link" routerLink="/cad-dizajn-usluga">
+      <div class="sv-card">
+        <span class="sv-num">04</span>
+        <div class="sv-icon-wrap">
+          <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="4" width="22" height="16" rx="2" stroke="#6B7280" stroke-width="1.2"/>
+            <line x1="2" y1="22" x2="24" y2="22" stroke="#6B7280" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="13" y1="20" x2="13" y2="22" stroke="#6B7280" stroke-width="1.2"/>
+            <polyline points="6,16 9,11 13,14 17,8 21,12" fill="none" stroke="#FF6B00" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+            <circle cx="21" cy="12" r="1.8" fill="#FF6B00"/>
+          </svg>
+        </div>
+        <p class="sv-card-title">CAD & design</p>
+        <p class="sv-card-desc">Pomoć sa CAD datotekama i dizajnom projekata — ne dozvolite da vas nedostatak dizajna spreči u realizaciji ideja.</p>
+      </div>
+    </a>
+
+    <a  class="service-card-link" routerLink="/tehnicka-podrska-usluga">
+      <div class="sv-card">
+          <span class="sv-num">05</span>
+          <div class="sv-icon-wrap">
+              <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="4" width="18" height="18" rx="2" stroke="#6B7280" stroke-width="1.2"/>
+              <path d="M7 18 L11 12 L14 15 L19 9" fill="none" stroke="#FF6B00" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="19" cy="9" r="1.6" fill="#FF6B00"/>
+              <line x1="4" y1="22" x2="22" y2="22" stroke="#6B7280" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+          </div>
+          <p class="sv-card-title">Tehnička podrška</p>
+          <p class="sv-card-desc">
+              Pružamo stručnu tehničku podršku tokom celog procesa — od ideje i projektovanja do finalne izrade i optimizacije proizvodnje.
+          </p>
+      </div>
+    </a>
+  </div>
+</div>
+
+<section class="material-home-table-section">
+  <span class="sv-eyebrow">MATERIJALI</span>
+  <h2 class="home-table-wrapper-heading">Materijali koje obrađujemo</h2>
+
+
+  <div class = "home-table-wrapper-desktop">
+    <div class="table-div">
+      <h2 class="table-heading">Tehničke specifikacije</h2>
+
+      <table class="home-table">
+        <tr class="home-row">
+          <th class="home-heading-left"></th>
+          <th class="home-heading">
+            <div class="hex">
+                <img class="hex-img" src="celik.png">
+                <p class="hex-text">Čelik</p>
+            </div>
+          </th>
+          <th class="home-heading">
+            <div class="hex">
+                <img class="hex-img" src="aluminium.png">
+                <p class="hex-text">Aluminijum</p>
+            </div>
+          </th>
+          <th class="home-heading">
+            <div class="hex">
+                <img class="hex-img" src="inox.png">
+                <p class="hex-text">Prohrom</p>
+            </div>
+          </th>
+          <th class="home-heading">
+            <div class="hex">
+                <img class="hex-img" src="bakar.png">
+                <p class="hex-text">Bakar</p>
+            </div>
+          </th>
+          <th class="home-heading">
+            <div class="hex">
+                <img class="hex-img" src="messing.png">
+                <p class="hex-text">Mesing</p>
+            </div>
+          </th>
+          <th class="home-heading">
+            <div class="hex">
+                <img class="hex-img" src="hardox.png">
+                <p class="hex-text">Hardox</p>
+            </div>
+          </th>
+        </tr>
+        
+        <tr class="home-row">
+          <td class="home-cell-text-1">Maksimalna<br>debljina</td>
+          <td class="home-cell">20 <span class="mmSpan">mm</span></td>
+          <td class="home-cell">10 <span class="mmSpan">mm</span></td>
+          <td class="home-cell">5 <span class="mmSpan">mm</span></td>
+          <td class="home-cell">5 <span class="mmSpan">mm</span></td>
+          <td class="home-cell">5 <span class="mmSpan">mm</span></td>
+          <td class="home-cell-2">5 <span class="mmSpan">mm</span></td>
+        </tr>
+
+        <tr class="home-row">
+          <td class="home-cell-text-2">Maksimalno<br>savijanje</td>
+          <td class="home-cell">5 <span class="mmSpan">mm</span></td>
+          <td class="home-cell">5 <span class="mmSpan">mm</span></td>
+          <td class="home-cell">5 <span class="mmSpan">mm</span></td>
+          <td class="home-cell">5 <span class="mmSpan">mm</span></td>
+          <td class="home-cell">5 <span class="mmSpan">mm</span></td>
+          <td class="home-cell-2">5 <span class="mmSpan">mm</span></td>
+        </tr>
+
+        
+
+        <tr class="home-row">
+          <td class="home-cell-text-3">Dimenzije<br>mašine</td>
+          <td class="home-cell-bottom" colspan="6">1500 x 3000 <span class="mmSpan">mm</span></td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
+  <div class="grid-container-material">
+    <div class="grid-item-material">
+        <img class="hex-img" src="celik.png">
+        <p class="hex-text">Čelik</p>
+    </div>
+    <div class="grid-item-material">
+        <img class="hex-img" src="aluminium.png">
+        <p class="hex-text">Aluminijum</p>
+    </div>
+    <div class="grid-item-material">
+        <img class="hex-img" src="inox.png">
+        <p class="hex-text">Prohrom</p>
+    </div>
+    <div class="grid-item-material">
+        <img class="hex-img" src="bakar.png">
+        <p class="hex-text">Bakar</p>
+    </div>
+    <div class="grid-item-material">
+        <img class="hex-img" src="messing.png">
+        <p class="hex-text">Mesing</p>
+    </div>
+    <div class="grid-item-material">
+        <img class="hex-img" src="hardox.png">
+        <p class="hex-text">Hardox</p>
+    </div>
+  </div>
+
+  <div class = "home-table-wrapper-mobile">
+    <div class="table-div">
+      <h2 class="table-heading">Tehničke specifikacije</h2>
+
+      <table class="home-table">
+        <tr class="home-row">
+          <th class="home-heading-left"></th>
+          <th class="home-heading">
+              <p>Čelik</p>
+          </th>
+          <th class="home-heading">
+              <p>Aluminijum</p>
+          </th>
+          <th class="home-heading">
+              <p>Ostalo</p>
+          </th>
+        </tr>
+        
+        <tr class="home-row">
+          <td class="home-cell-text-1">Maksimalna<br>debljina</td>
+          <td class="home-cell">20 <span class="mmSpan">mm</span></td>
+          <td class="home-cell">10 <span class="mmSpan">mm</span></td>
+          <td class="home-cell-2">5 <span class="mmSpan">mm</span></td>
+        </tr>
+
+        <tr class="home-row">
+          <td class="home-cell-text-2">Maksimalno<br>savijanje</td>
+          <td class="home-cell">5 <span class="mmSpan">mm</span></td>
+          <td class="home-cell">5 <span class="mmSpan">mm</span></td>
+          <td class="home-cell-2">5 <span class="mmSpan">mm</span></td>
+        </tr>
+
+        <tr class="home-row">
+          <td class="home-cell-text-3">Dimenzije<br>mašine</td>
+          <td class="home-cell-bottom" colspan="3">1500 x 3000 <span class="mmSpan">mm</span></td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+</section>
+
+<section class="carousel-section">
+  <span class="carousel-eyebrow">NAŠI RADOVI</span>
+  <h2 class="carousel-heading">Galerija radova</h2>
+  <div class = "carousel-wrapper">
+    <app-carousel variant="left"></app-carousel>
+    <div class="carousel-wrapper-mobile">
+      <app-carousel variant="right"></app-carousel>
+    </div>
+  </div>
+</section>
+
+<app-footer-component></app-footer-component>

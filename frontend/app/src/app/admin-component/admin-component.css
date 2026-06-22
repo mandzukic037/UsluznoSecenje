@@ -864,3 +864,143 @@
   cursor: pointer;
   border: 1px solid #ddd;
 }
+
+/* ===================== NOTIFIKACIJE ===================== */
+.notifContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
+
+.notifToast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #fff;
+  min-width: 260px;
+  animation: notifSlide .3s ease;
+  box-shadow: 0 8px 30px rgba(0,0,0,.4);
+}
+
+.notifPorudzbina { background: #1e3a5f; border-left: 3px solid #3b82f6; }
+.notifUpit { background: #2d1f3d; border-left: 3px solid #8b5cf6; }
+
+.notifIcon { flex-shrink: 0; }
+.notifPorudzbina .notifIcon { color: #3b82f6; }
+.notifUpit .notifIcon { color: #8b5cf6; }
+
+.notifClose {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,.5);
+  cursor: pointer;
+  font-size: 13px;
+  flex-shrink: 0;
+  padding: 2px 4px;
+  transition: .2s;
+}
+.notifClose:hover { color: #fff; }
+
+@keyframes notifSlide {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ===================== GALERIJA ===================== */
+.galerijaUploadCard {
+  background: #1A1F29;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.galerijaDropZone {
+  border: 1.5px dashed rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 36px;
+  text-align: center;
+  cursor: pointer;
+  color: #6B7280;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: .2s;
+  background: #0F1115;
+}
+
+.galerijaDropZone:hover,
+.galerijaDropZone.dragging {
+  border-color: #FF6B00;
+  background: rgba(255,107,0,.04);
+  color: #FF6B00;
+}
+
+.galerijaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.galerijaCard {
+  background: #1A1F29;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform .2s;
+}
+
+.galerijaCard:hover { transform: translateY(-4px); }
+
+.galerijaImgWrap {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+}
+
+.galerijaImgWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: .4s;
+}
+
+.galerijaCard:hover .galerijaImgWrap img { transform: scale(1.06); }
+
+.galerijaDeleteBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  background: rgba(239,68,68,.85);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: .2s;
+}
+
+.galerijaImgWrap:hover .galerijaDeleteBtn { opacity: 1; }
+
+.galerijaCardInfo {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.galerijaCardTitle { color: #fff; font-size: 13px; font-weight: 600; }
+.galerijaCardCat { color: #FF6B00; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }

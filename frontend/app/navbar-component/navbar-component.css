@@ -1,0 +1,464 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+/* ── NAV ── */
+.navSection {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12vh;
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  z-index: 999;
+  backdrop-filter: blur(10px);
+}
+
+.homeNav {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.navDiv {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.nav-logo-img {
+  padding: 8px;
+  height: 10vh;
+  width: auto;
+  display: block;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-links a {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.active-link{
+  color:#FF6B00 !important;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  border: 1px solid #FF6B00;
+}
+
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.nav-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  padding: 10px 22px;
+  border-radius: 7px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── DROPDOWN ── */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-toggle {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.nav-dropdown-toggle:hover {
+  background: transparent;
+  
+  color: #fff;
+}
+
+.nav-arrow {
+  font-size: 11px;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.nav-dropdown:hover .nav-arrow {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background-color: #1A1F29;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 6px;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 1000;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav-dropdown-menu a {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.nav-dropdown-menu a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* ── MOBILNI DROPDOWN ── */
+.mobile-dropdown > a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.mobile-dropdown > a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.mobile-dropdown .nav-arrow {
+  font-size: 11px;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.mobile-dropdown .nav-arrow.open {
+  transform: rotate(180deg);
+}
+
+.mobile-dropdown-menu {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 0 4px 12px;
+}
+
+.mobile-dropdown-menu.open {
+  display: flex;
+}
+
+.mobile-dropdown-menu a {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.mobile-dropdown-menu a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* hamburger dugme */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+/* mobilni meni */
+.nav-mobile {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  position: absolute;
+  top: 10vh;
+  left: 0;
+  right: 0;
+  background-color: #1A1F29;
+  padding: 12px 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  z-index: 100;
+}
+
+.nav-mobile.open {
+  display: flex;
+}
+
+.nav-mobile a {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-mobile a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.nav-mobile .nav-btn {
+  margin-top: 8px;
+  width: 100%;
+  text-align: center;
+  padding: 11px;
+}
+
+
+
+
+  /* =========================================================
+   RESPONSIVE FIX ONLY
+========================================================= */
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  overflow-x:hidden;
+}
+
+img,
+video{
+  max-width:100%;
+}
+
+/* ------------------------------
+   LARGE LAPTOP
+------------------------------ */
+
+@media (max-width:1200px){
+
+  .homeNav{
+    width:92%;
+  }
+
+  .services-grid{
+    gap:40px 50px;
+  }
+
+}
+
+/* ------------------------------
+   TABLET
+------------------------------ */
+
+@media (max-width:992px){
+
+  .nav-links,
+  .nav-btn{
+    display:none;
+  }
+
+  .nav-toggle{
+    display:flex;
+  }
+
+  .nav-logo-img{
+    height:52px;
+  }
+
+  .homeBanner{
+    padding:120px 30px 70px;
+  }
+
+  .banner-h1{
+    font-size:clamp(42px,8vw,64px);
+    line-height:1.05;
+  }
+
+  .banner-sub{
+    max-width:600px;
+  }
+
+  .services-section{
+    padding:70px 30px;
+  }
+
+  .services-grid{
+    grid-template-columns:1fr;
+    max-width:650px;
+    gap:50px;
+  }
+
+  .sv-wrap{
+    padding:70px 30px;
+  }
+
+  .sv-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+/* ------------------------------
+   SMALL MOBILE
+------------------------------ */
+
+@media (max-width:480px){
+
+  .homeBanner{
+    padding:100px 18px 50px;
+  }
+
+  .banner-h1{
+    font-size:30px;
+    line-height:1.08;
+  }
+
+  .banner-sub{
+    font-size:13px;
+  }
+
+  .services-section,
+  .sv-wrap{
+    padding-left:20px;
+    padding-right:20px;
+  }
+
+  .services-heading,
+  .sv-heading{
+    font-size:24px;
+  }
+
+  .service-title,
+  .sv-card-title{
+    font-size:16px;
+  }
+
+  .service-desc,
+  .sv-card-desc{
+    font-size:12.5px;
+    line-height:1.65;
+  }
+  
+
+  .sv-card{
+    padding:28px 20px;
+  }
+
+  .sv-num{
+    right:18px;
+    top:14px;
+  }
+
+}
+
+/* ------------------------------
+   EXTRA SMALL
+------------------------------ */
+
+@media (max-width:360px){
+
+  .banner-h1{
+    font-size:26px;
+  }
+
+  .services-heading,
+  .sv-heading{
+    font-size:21px;
+  }
+
+}
+
+/* ------------------------------
+   MOBILE MENU ANIMATION
+------------------------------ */
+
+.nav-mobile{
+  animation:fadeMenu .2s ease;
+}
+
+@keyframes fadeMenu{
+
+  from{
+    opacity:0;
+    transform:translateY(-8px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+

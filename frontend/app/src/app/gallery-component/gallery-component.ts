@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, signal, computed, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FooterComponent } from '../footer-component/footer-component';
 import { NavbarComponent } from '../navbar-component/navbar-component';
-import { CommonModule } from '@angular/common';
+import { GalleryService, GalleryItem } from '../services/gallery-service';
 
 @Component({
   selector: 'app-gallery-component',
@@ -10,52 +11,39 @@ import { CommonModule } from '@angular/common';
   templateUrl: './gallery-component.html',
   styleUrl: './gallery-component.css',
 })
-export class GalleryComponent {
-  selectedCategory = 'Sve';
+export class GalleryComponent implements OnInit {
 
+  selectedCategory = signal('Sve');
+  loading = signal(false);
+  errorMsg = signal('');
+
+  categories = ['Sve', 'Lasersko sečenje', 'CNC savijanje', 'Graviranje', 'CAD Design'];
   sizes = ['small', 'medium', 'wide', 'tall'];
 
-  galleryItems = [
-  {
-    image: '/sto1.png',
-    title: 'Industrijska konstrukcija',
-    category: 'Lasersko sečenje',
-  },
-  {
-    image: '/sto2.png',
-    title: 'Metalni detalji',
-    category: 'Graviranje',
-  },
-  {
-    image: '/sto3.png',
-    title: 'Precizna obrada',
-    category: 'CNC savijanje',
-  },
-  {
-    image: '/sto4.png',
-    title: 'Proizvodni element',
-    category: 'Lasersko sečenje',
-  },
-  {
-    image: '/sto5.png',
-    title: 'Industrijski projekat',
-    category: 'CAD Design',
-  },
-  {
-    image: '/rostilj1.jpeg',
-    title: 'Metalna konstrukcija',
-    category: 'CNC savijanje',
-  }
-];
+  private _items = signal<GalleryItem[]>([]);
 
-  get filteredItems() {
-    if (this.selectedCategory === 'Sve') {
-      return this.galleryItems;
-    }
+  filteredItems = computed(() => {
+    const cat = this.selectedCategory();
+    return cat === 'Sve'
+      ? this._items()
+      : this._items().filter(item => item.category === cat);
+  });
 
-    return this.galleryItems.filter(
-      item => item.category === this.selectedCategory
-    );
+  constructor(private galleryService: GalleryService) {}
+
+  ngOnInit() {
+    this.loading.set(true);
+    this.galleryService.getItems().subscribe({
+      next: (items) => {
+        this._items.set(items);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.errorMsg.set('Greška pri učitavanju galerije.');
+        this.loading.set(false);
+      }
+    });
   }
 
+  setCategory(cat: string) { this.selectedCategory.set(cat); }
 }

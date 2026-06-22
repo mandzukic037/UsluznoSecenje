@@ -54,54 +54,63 @@
 
   <div class="galleryFilters">
 
-    <button
-        [class.active]="selectedCategory === 'Sve'"
-        (click)="selectedCategory='Sve'">
-        Sve
-    </button>
+  <button
+      [class.active]="selectedCategory() === 'Sve'"
+      (click)="setCategory('Sve')">
+      Sve
+  </button>
 
-    <button
-        [class.active]="selectedCategory === 'Lasersko sečenje'"
-        (click)="selectedCategory='Lasersko sečenje'">
-        Lasersko sečenje
-    </button>
+  <button
+      [class.active]="selectedCategory() === 'Lasersko sečenje'"
+      (click)="setCategory('Lasersko sečenje')">
+      Lasersko sečenje
+  </button>
 
-    <button
-        [class.active]="selectedCategory === 'CNC savijanje'"
-        (click)="selectedCategory='CNC savijanje'">
-        CNC savijanje
-    </button>
+  <button
+      [class.active]="selectedCategory() === 'CNC savijanje'"
+      (click)="setCategory('CNC savijanje')">
+      CNC savijanje
+  </button>
 
-    <button
-        [class.active]="selectedCategory === 'Graviranje'"
-        (click)="selectedCategory='Graviranje'">
-        Graviranje
-    </button>
+  <button
+      [class.active]="selectedCategory() === 'Graviranje'"
+      (click)="setCategory('Graviranje')">
+      Graviranje
+  </button>
 
-    <button
-        [class.active]="selectedCategory === 'CAD Design'"
-        (click)="selectedCategory='CAD Design'">
-        CAD Design
-    </button>
+  <button
+      [class.active]="selectedCategory() === 'CAD Design'"
+      (click)="setCategory('CAD Design')">
+      CAD Design
+  </button>
 
-    </div>
+</div>
 
-  <div class="galleryGrid">
 
-    
 
-  @for(item of filteredItems; track item;) {
-    <div class="galleryItem">
-        <img [src]="item.image">
-
-        <div class="galleryInfo">
-            <h3>{{item.title}}</h3>
-            <span>{{item.category}}</span>
-        </div>
-    </div>
-  }
-
+@if (loading()) {
+  <div class="skeletonGrid">
+    <div class="skeletonItem tall"></div>
+    <div class="skeletonItem"></div>
+    <div class="skeletonItem"></div>
+    <div class="skeletonItem wide"></div>
+    <div class="skeletonItem"></div>
   </div>
+} @else if (errorMsg()) {
+  <p style="color:#FF6B00">{{ errorMsg() }}</p>
+} @else {
+  <div class="galleryGrid">
+    @for (item of filteredItems(); track item.id) {
+      <div class="galleryItem">
+        <img [src]="item.image">
+        <div class="galleryInfo">
+          <h3>{{ item.title }}</h3>
+          <span>{{ item.category }}</span>
+        </div>
+      </div>
+    }
+  </div>
+}
 
 </section>
 
