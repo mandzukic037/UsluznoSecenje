@@ -5,6 +5,7 @@ import com.usluznosecenje.model.PorudzbineStavka;
 import com.usluznosecenje.repository.PorudzbineRepository;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
@@ -19,6 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PorudzbineService {
 
+    private final PushNotificationService pushService;
     private final PorudzbineRepository porudzbineRepository;
     private final JavaMailSender mailSender;
 
@@ -64,6 +66,8 @@ public class PorudzbineService {
 
         Porudzbina saved = porudzbineRepository.save(p);
         posaljiMailove(saved);
+
+        pushService.sendToAll("Nova porudžbina!", "Nova porudžbina #" + saved.getId());
         return saved;
     }
 

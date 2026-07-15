@@ -1004,3 +1004,18 @@
 
 .galerijaCardTitle { color: #fff; font-size: 13px; font-weight: 600; }
 .galerijaCardCat { color: #FF6B00; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+
+.pushDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4B5563;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: .3s;
+}
+
+.pushDot.active {
+  background: #16a34a;
+  box-shadow: 0 0 6px #16a34a;
+}

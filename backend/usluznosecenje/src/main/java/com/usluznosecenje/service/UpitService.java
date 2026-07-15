@@ -23,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UpitService {
 
+    private final PushNotificationService pushService;
     private final JavaMailSender mailSender;
     private final UpitRepository upitRepository;
     private final UpitFajlRepository upitFajlRepository;
@@ -111,6 +112,8 @@ public class UpitService {
                 }
             }
         }
+        pushService.sendToAll("Novi upit!", "Stigao je novi upit od " + upit.getIme());
+
 
         mailSender.send(message);
     }

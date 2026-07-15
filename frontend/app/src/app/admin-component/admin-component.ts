@@ -743,4 +743,56 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
   }
 
+  pushEnabled = signal(false);
+
+  async enablePushNotifications() {
+  if (this.pushEnabled()) {
+    this.pushEnabled.set(false);
+    this.showSuccess('Push notifikacije isključene');
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+
+  if (permission !== 'granted') {
+    this.showError('Dozvola odbijena');
+    return;
+  }
+
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const VAPID_PUBLIC_KEY = 'BHvQMlfU1kF3JRuWdauPgfUvU0cuXJWx-KDatwtSmybiZl7J5CYOjZUGw_Q9dwMjiLDcg8p1knOPPOMuM1a-zAk';
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: this.urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+    });
+
+    console.log('SUB', sub);
+
+    this.http.post(`${this.API}/push/subscribe`, sub).subscribe({
+      next: () => {
+        this.pushEnabled.set(true);
+        this.showSuccess('Push notifikacije uključene!');
+      },
+      error: err => {
+        console.error(err);
+        this.showError('Greška pri aktivaciji');
+      }
+    });
+
+  } catch (e) {
+    console.error('PUSH ERROR', e);
+    this.showError('Greška pri registraciji push notifikacija');
+  }
+}
+
+  urlBase64ToUint8Array(base64String: string) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
+  }
 }
